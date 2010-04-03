@@ -1,0 +1,185 @@
+
+
+/* Give all the footer widgets pretty titles */
+#footer2 .widget h4 {
+	height: 30px;
+	background: url("images/widget_headings_sprite.png") 0 0 no-repeat;
+}
+#footer2 #widget_pages h4{background-position: 0 0}
+#footer2 #widget_calendar h4{background-position: 0 -30px}
+#footer2 #widget_archive h4{background-position: 0 -60px}
+#footer2 #linkcat-1 h4,
+#footer2 #linkcat-2 h4,
+#footer2 #linkcat-3 h4,
+#footer2 #linkcat-4 h4,
+#footer2 #linkcat-5 h4{background-position: 0 -90px}
+#footer2 #widget_meta h4{background-position: 0 -120px}
+#footer2 #widget_search h4{background-position: 0 -150px}
+#footer2 #widget_recent_entries h4{background-position: 0 -180px}
+#footer2 #widget_tag_cloud h4{background-position: 0 -210px}
+#footer2 #widget_categories h4{background-position: 0 -240px}
+#footer2 #widget_text h4{background-position: 0 -270px}
+#footer2 #widget_rss h4{background-position: 0 -300px}
+#footer2 #widget_recent_comments h4{background-position: 0 -330px}
+	#footer2 .widget h4 span{display: none}
+
+	#footer2 .widget{
+		padding: 5px 0 20px 0;
+		color: #666870;
+		font-family: Calibri, "Trebuchet MS";
+	}
+		#footer2 .widget a{
+			text-decoration: none;
+			color: #afaea8;
+		}
+		#footer2 .widget a:hover{
+			color: #fff;
+		}
+		#footer2 .widget ul{
+			padding: 0 10px;
+		}
+			#footer2 .widget ul li{
+				padding: 3px 0 3px 15px;
+				background: url("images/footer2_link_bullet.png") 0 8px no-repeat;
+			}
+
+/* Give all the sidebar widgets pretty titles */
+#sidebar .widget h4 {
+	height: 30px;
+	background: url("images/widget_headings2_sprite.png") 0 0 no-repeat;
+}
+#sidebar #widget_pages h4{background-position: 0 0}
+#sidebar #widget_calendar h4{background-position: 0 -30px}
+#sidebar #widget_archive h4{background-position: 0 -60px}
+#sidebar #linkcat-1 h4,
+#sidebar #linkcat-2 h4,
+#sidebar #linkcat-3 h4,
+#sidebar #linkcat-4 h4,
+#sidebar #linkcat-5 h4{background-position: 0 -90px}
+#sidebar #widget_meta h4{background-position: 0 -120px}
+#sidebar #widget_search h4{background-position: 0 -150px}
+#sidebar #widget_recent_entries h4{background-position: 0 -180px}
+#sidebar #widget_tag_cloud h4{background-position: 0 -210px}
+#sidebar #widget_categories h4{background-position: 0 -240px}
+#sidebar #widget_text h4{background-position: 0 -270px}
+#sidebar #widget_rss h4{background-position: 0 -300px}
+#sidebar #widget_recent_comments h4{background-position: 0 -330px}
+#sidebar #widget_advertisers h4{background-position: 0 -360px;}
+	#sidebar .widget h4 span{display: none}
+#sidebar .widgets{
+	padding: 0 0 0 10px;
+}
+	#sidebar .widget{
+		padding: 5px 0 20px 0;
+		color: #73767f;
+		font-family: Calibri, "Trebuchet MS";
+	}
+		#sidebar .widget a{
+			text-decoration: none;
+			color: #27282b;
+		}
+		#sidebar .widget a:hover{
+			color: #31649a;
+		}
+		#sidebar .widget ul{
+			padding: 0 10px;
+		}
+			#sidebar .widget ul li{
+				padding: 3px 0 3px 15px;
+				background: url("images/sidebar_link_bullet.png") 0 8px no-repeat;
+			}
+
+
+/* Some widgets need extra love */
+#widget_search .form{
+	padding: 10px 0 10px 20px;
+}
+#widget_tag_cloud{
+	text-align: center;
+}
+	#widget_tag_cloud a{
+		padding: 0 .25em;
+	}
+	#widget_tag_cloud a:hover{
+		text-decoration: underline;
+	}
+#widget_text .textwidget{
+	padding: 10px;
+	text-indent: 1em;
+}
+#widget_advertisers{
+	text-align: center;
+}
+
+#footer2 #widget_recent_comments li{
+	padding-left: 15px !important;
+}
+#footer2 #widget_recent_comments li a{
+	color: #afaea8 !important;
+	display: block !important;
+	text-decoration: none !important;
+}
+	#footer2 #widget_recent_comments li a:hover{
+		color: #fff !important;
+	}
+	#footer2 #widget_recent_comments li a.url{
+		color: #666870 !important;
+		text-decoration: underline !important;
+		display: inline !important;
+		padding-left: 0 !important;
+	}
+#sidebar #widget_recent_comments li{
+	padding-left: 15px !important;
+}
+#sidebar #widget_recent_comments li a{
+	display: block !important;
+	text-decoration: none !important;
+}
+	#sidebar #widget_recent_comments li a.url{
+		color: #73767f !important;
+		text-decoration: underline !important;
+		display: inline !important;
+		padding-left: 0 !important;
+	}
+
+#calendar_wrap{
+	padding: 10px 20px;
+}
+	#calendar_wrap table{
+		width: 100%;
+	}
+	#calendar_wrap caption{
+		padding: 0 0 6px 0;
+	}
+	#calendar_wrap td{
+		text-align: center;
+	}
+	#calendar_wrap td#prev{
+		text-align: left;
+	}
+	#calendar_wrap td#next{
+		text-align: right;
+	}
+
+
+
+
+
+
+
+.widgets ul{
+	padding: 5px 0;
+}
+	.widgets li{
+		text-indent: 10px;
+		padding: 2px 0;
+	}
+	#sidebar .widgets li{
+		text-indent: 0;
+		padding-left: 10px;
+	}
+
+
+	
+
+	

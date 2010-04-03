@@ -1,0 +1,591 @@
+/*
+Theme Name: WP SMASHING
+Theme URI: http://bustatheme.com/wordpress/wp-smashing/
+Description: WP SMASHING is a graphical and functional update to the WP CALENDAR plugin for <a href="http://smashingmagazine.com">Smashing Magazine</a> brought to you by <a href="http://bustatheme.com">Bust A Theme</a>.
+Version: 1.0
+Author: Greg Johnson of BustATheme.com
+Author URI: http://greg-j.com/
+Tags: fixed width, two columns, right sidebar, widgets, gravatars, grey, red, white, brown, black, clean, valid XHTML, valid CSS
+*/
+
+/* CSS Reset */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend caption{ margin:0; padding:0; border:0; outline:0; font-weight:inherit; font-style:inherit; font-size:100%; font-family:inherit; vertical-align:baseline}
+:focus{outline:0}
+ol, ul{list-style:none}
+blockquote:before, blockquote:after, q:before, q:after{content:""}
+blockquote, q{quotes:"" ""}
+strong{font-weight:bold}
+em{font-style:normal}
+a{text-decoration:none; cursor:pointer}
+
+body{
+	color: #53534e;
+	font-family: "Trebuchet MS", Arial, Tahoma;
+	font-size: 13px;
+	background-color:#000; /* Not the main background color, but prevents the footer cutting off too soon in the even the users screen is taller than the page */
+}
+a{
+	color: #31649a;
+	text-decoration: underline;
+}
+a:visited{
+	color: #83a2c2;
+}	
+a:hover{
+	color: #000;
+}
+
+#header{
+	height: 100px;
+	background: url("images/header_background_tiled.png") 0 0 repeat-x;
+}
+	#header p{
+		height: 100px;
+		width: 100%;
+		background: url("images/header_background.png") 50% 0 no-repeat;
+	}
+		#header p a{ /* Make the logo a block with an image background and anchor it */
+			display: block;
+			position: absolute;
+			top: 20px;
+			left: 50%;
+			margin: 0 0 0 -500px;
+			width: 320px;
+			height: 60px;
+			background: url("images/header_heading_background.png") 0 0 no-repeat;
+		}
+			#header p a strong{ /* No need to display the blog title and description, we're using an image */
+				display: none;
+			}
+
+#search_panel{
+	display: none;
+	background: #0b0b0b;
+}
+	#search_panel .search_form{
+		width: 1000px;
+		margin: 0 auto;
+		padding: 15px 0;
+		text-align: right;
+	}
+		#search_panel input,
+		#search_panel button,
+		#search_panel form{
+			border-width: 0;
+			margin: 0;
+			padding: 0;
+			background: none;
+		}
+		#search_panel .textbox{
+			margin: 0 5px 0 0;
+			padding: 3px 10px 0 10px;
+			width: 220px;
+			height: 21px;
+			color: #696c74;
+			background: url("images/search_tab_textarea_background.png") 100% 0 no-repeat;
+		}
+			#search_panel button{
+				cursor: pointer;
+				width: 60px;
+				height: 24px;
+				margin: 0 0 1px 0;
+				vertical-align: middle;
+				background: url("images/search_tab_submit_background.png") 0 0 no-repeat;
+			}
+				#search_panel button span{
+					display: none;
+				}
+
+#navigation{
+	height: 35px;
+	background: url("images/navigation_background_tiled.png") 0 0 repeat-x;
+}
+	#navigation ul{ /* center the navigation menu */
+		overflow: hidden;
+		width: 1000px;
+		margin: 0 auto;
+	}
+		#navigation ul li{
+			display: block;
+			float: left;
+			height: 35px;
+		}
+			#navigation ul li a{
+				display: block;
+				float: left;
+				height: 35px;
+				line-height: 40px;
+				padding: 0 20px;
+				color: #5a5a54;
+				text-decoration: none;
+			}
+			#navigation ul li a:hover{
+				color: #292926;
+				background: url("images/navigation_link_hover.png") 0 0 repeat-x;
+			}
+			#navigation ul li.search{
+				float:right;
+			}
+				#navigation ul li.search a{
+					width: 35px;
+					height: 30px;
+					padding: 0;
+					background: url("images/search_tab_icon.png") 0 0 no-repeat;
+				}
+					#navigation ul li.search a span{
+						display: none;
+					}
+			#navigation ul li.rss a span{
+				padding-left: 20px;
+				background: url("images/rss_icon_14.png") left center no-repeat;
+			}
+
+#quote{
+	height: 70px;
+	background: #eeeddf url("images/quote_background.png") 50% 0 no-repeat;
+}
+	#quote p{
+		display: none;
+	}
+
+
+#frame{ /* set the main background color */
+	background: #eeeddf;
+}
+	#page{ /* center the content */
+		overflow: hidden;
+		width:1002px; /* 2px extra for the calendar border */
+		margin:0 auto;
+		padding: 0 0 30px 0;
+	}
+
+#wp_calendar{
+	padding: 15px 0 5px 15px;
+	background: #fdfdfb url("images/page_element_background_tile.png") 0 0 repeat-x;
+	border: solid 1px #d7d6c9;
+}
+	#wp_calendar h3{
+		margin: 0 15px 10px 0;
+		padding: 2px 5px;
+		color: #b40707;
+		text-align: center;
+		font-size: 16px;
+		font-weight: bold;
+		text-transform: uppercase;
+		letter-spacing: -1px;
+	}
+	#wp_calendar ul.weekdays{
+		overflow: hidden;
+		padding: 0 0 10px 0;
+	}
+		#wp_calendar ul.weekdays li{
+			display: block;
+			float: left;
+			margin: 0 10px 0 0;
+			padding: 5px 0 0 0;
+			text-indent: 5px;
+			width: 130px;
+			color: #c7c6ba;
+			font-size: 12px;
+			font-weight: bold;
+			text-transform: uppercase;
+			letter-spacing: -1px
+		}
+	#wp_calendar ul.week{
+		height: 128px;
+	}
+		#wp_calendar ul.week li{
+			overflow: hidden;
+			display: block;
+			float: left;
+			margin: 0 10px 10px 0;
+			padding: 0;
+			width: 130px;
+			font-size: 11px;
+			background: url("images/calendar_day_background.png") 0 23px no-repeat;
+		}
+		#wp_calendar ul.week li.empty{
+			background-image: none;
+		}
+		#wp_calendar ul.week li div.head{
+			overflow: hidden;
+			padding: 0 5px 5px 5px;
+			height: 18px;
+			line-height: 18px;
+			color: #99988f;
+			text-align: right;
+			font-weight: bold;
+			font-size: 12px;
+			background: url("images/calendar_day_heading_background.png") 0 0 no-repeat;
+		}
+		#wp_calendar ul.week li div.day{
+			overflow: auto;
+			height: 85px;
+			padding: 5px;
+		}
+				#wp_calendar ul.week li div.day ul li{
+					float: none;
+					margin: 0;
+					padding: 2px 0;
+					width: auto;
+					background: inherit;
+					border: none;
+					border-bottom: solid 1px #f6f6f6;
+				}
+					#wp_calendar ul.week li div.day ul li a{
+						text-decoration: none;
+					}
+
+#content{
+	float: left;
+	width: 658px;
+	background: #fff url("images/post-head-bg.png") 0 0 repeat-x;
+	border: solid 1px #d7d6c9;
+}
+	#content .post{
+		padding: 10px;
+	}
+		#content .post a{
+			text-decoration: underline;
+		}
+		#content .post .head{
+			padding: 0 0 5px 0;
+		}
+			#content .post .head h1{
+				padding: 0 10px;
+				color: #b40707;
+				font-size: 24px;
+				font-weight: bold;
+				text-transform: uppercase;
+				border-bottom: 1px solid #e9e8e1;
+			}
+				#content .post .head h1 a{
+					color: #b40707;
+					text-decoration: none;
+				}
+				#content .post .head h1 a:hover{
+					color: #000;
+				}
+			#content .post .head p{
+				float: right;
+				padding: 10px 0 0 0;
+			}
+				#content .post .head img{
+					padding: 1px;
+					border: 1px solid #e9e8e1;
+					background: #fff;
+				}
+		#content .post .premetadata{
+			height: 16px;
+			line-height: 16px;
+			color: #c9c8bc;
+			font-family: Calibri, "Trebuchet MS";
+			font-size: 12px;
+			padding: 0 0 0 26px;
+			background: url("images/premetadata-bg.png") 5px 0 no-repeat;
+		}
+			#content .post .premetadata a{
+				color: #99988f;
+			}
+		#content .post .entry{
+			padding: 20px 10px;
+		}
+			#content .post .entry h1,
+			#content .post .entry h2,
+			#content .post .entry h3,
+			#content .post .entry h4{
+				color: #3a3a36;
+				border: none;
+			}
+				#content .post .entry h1{font-size: 2em}
+				#content .post .entry h2{font-size: 1.8em}
+				#content .post .entry h3{font-size: 1.65em}
+				#content .post .entry h4{font-size: 1.5em}
+			#content .post .entry p{
+				padding: 5px 0;
+				text-indent: 10px;
+			}
+			#content blockquote{
+				margin: 20px;
+				padding: 0 10px;
+				border-left: 3px solid #8c979c;
+			}
+			#content .post .entry ul{
+				padding: 0 25px;
+			}
+				#content .post .entry ul li{
+					list-style-position: outside;
+					list-style: square;
+				}
+			#content .post .entry ol{
+				padding: 0 30px;
+			}
+				#content .post .entry ol li{
+					list-style-position: outside;
+					list-style: decimal;
+				}
+			#content .post .entry strong{font-weight: bold}
+			#content .post .entry em{font-style: italic}
+			#content .post .entry u{text-decoration: underline}
+		#content .post .navigation{
+			padding: 20px 10px;
+			overflow: hidden;
+		}
+			#content .post .navigation .prev{
+				float: left;
+			}
+			#content .post .navigation .next{
+				float: right;
+			}
+		#content .post .postmetadata{
+			color: #b0afa5;
+			padding: 15px;
+			background: #f6f6ef;
+		}
+
+
+#comments{
+ 	padding:0 20px;
+}
+	#comments .comment{
+		overflow: hidden;
+		margin:20px 0;
+		padding:0 0 10px 0;
+		border-bottom:solid 2px #eeeddf;
+	}
+	#comments .special{
+		padding:10px;
+		background:#fffde7;
+	}
+		#comments .comment .avatar{
+			float: left;
+			margin: 5px 5px 0 0;
+			padding: 1px;
+			border: 1px solid #eeeddf;
+		}
+		#comments .comment .author{
+			font-size:16px;
+			color:#27282B;
+			font-weight:bold;
+		}
+			#comments .comment .author span{
+				color:#b0afa5;
+				font-size:13px;
+			}
+			#comments .comment .author a{
+				color:#B40707;
+				text-decoration: none;
+			}
+			#comments .comment .author small{
+				display:block;
+			}
+			#comments .comment .author small a{
+				color:#b0afa5;
+				font-size:10px;
+				font-weight: normal;
+				text-decoration: none;
+			}
+		#comments .comment .response{
+			padding:15px 0 0 0;
+			color:#77777e;
+			font-size:13px;
+			line-height:1.5em;
+		}
+			#comments .comment .response p{
+				text-indent: 10px;
+			}
+		#comments .special .response{
+			color:#000;
+		}
+
+#reply{
+	padding:15px 20px;
+	margin-top:20px;
+}
+	#reply p{
+		padding:0 0 5px 0;
+	}
+		#reply p .textbox,
+		#reply p textarea{
+			width:35%;
+			font-size:14px;
+			padding:3px 5px;
+			font-weight:bold;
+			color:#212120;
+			font-family:Arial, Helvetica, sans-serif;
+			border:solid 1px #d1d0c4;
+		}
+		#reply p.allowed_html{
+			padding:5px 0 0 0;
+		}
+			#reply p.allowed_html strong{
+				color: #212120;
+			}
+			#reply p.allowed_html small{
+				color: #161615;
+				font-family:"Courier New", Courier, monospace;
+			}
+		#reply p textarea{
+			padding:5px;
+			width:95%;
+			height:10em;
+			font-weight:normal;
+		}
+		#reply p strong{
+			font-size:11px;
+			font-weight:bold;
+			color:#c12900;
+		}
+		#reply p small{
+			font-size:11px;
+			color:#c12900;
+		}
+		#reply p .submit{
+			padding:0;
+			font-size:15px;
+			font-family:Arial, Helvetica, sans-serif;
+			font-weight:bold;
+			color:#c12900;
+			border:none;
+			background:none;
+			cursor:pointer;
+		}
+
+
+#sidebar{
+	float: right;
+	width: 330px;
+}
+
+#footer1{
+	background: #600f0f url("images/footer1_background_tile.png") 0 0 repeat-x;
+}
+	#footer1 .wrapper{
+		height: 340px;
+		background: url("images/footer1_background.png") 50% 39px no-repeat;
+	}
+		#footer1 a{
+			color: #fff;
+			text-decoration: none;
+		}
+		#footer1 a:hover{
+			text-decoration: underline;
+		}
+		#footer1 ul{
+			overflow: hidden;
+			width: 1000px;
+			margin: 0 auto;
+			padding: 100px 0 0 0;
+			background: url("images/footer1_background_text.png") 0 39px no-repeat;
+		}
+			#footer1 ul .about{
+				width: 660px;
+				float: left;
+				padding: 15px 0 0 0;
+				color: #c88585;
+				font-size: 13px;
+				background: url("images/footer1_divider.png") 0 0 no-repeat;
+			}
+				#footer1 ul .about p{
+					padding: 0 10px;
+					text-indent: 1em;
+				}
+			#footer1 ul .contact{
+				width: 320px;
+				float: right;
+			}
+				#footer1 .contact em{
+					color: #180101;
+					font-family: Calibri, "Trebuchet MS";
+					font-style: italic;
+					font-size: 11px;
+				}
+				#footer1 .contact input,
+				#footer1 .contact textarea,
+				#footer1 .contact button,
+				#footer1 .contact form{
+					border-width: 0;
+					margin: 0;
+					padding: 0;
+					background: none;
+					vertical-align: top;
+				}
+				#footer1 .contact .name input,
+				#footer1 .contact .email input{
+					margin: 0 0 5px 0;
+					padding: 3px 10px 0 10px;
+					width: 220px;
+					height: 21px;
+					background: transparent url("images/footer2_textbox_background.png") 100% 0 no-repeat !important; /* stop google toolbar from messing with our style */
+				}
+				#footer1 .contact textarea{
+					overflow: hidden;
+					margin: 0 0 5px 0;
+					padding: 5px;
+					width:230px;
+					height: 100px;
+					background: url("images/footer2_textarea_background.png") 0 0 no-repeat;
+				}
+				#footer1 .contact .submit{
+					width: 230px;
+					text-align: right;
+				}
+					#footer1 .contact .submit button{
+						cursor: pointer;
+						width: 60px;
+						height: 20px;
+						background: url("images/footer2_submit_background.png") 50% 50% no-repeat;
+					}
+						#footer1 .contact .submit button span{
+							display: none;
+						}
+
+
+/* All widget styling is in widgets.css */
+#footer2{
+	background: #27282b url("images/footer2_background_tile.png") 0 0 repeat-x;
+}
+	#footer2 .wrapper{
+		width: 1000px;
+		margin: 0 auto;
+		padding: 20px 0 40px 0;
+		overflow: hidden;
+	}
+		#footer2 .left,
+		#footer2 .center,
+		#footer2 .right{
+			float: left;
+			margin: 0 20px 0 0;
+			width: 320px;
+		}
+		#footer2 .right{
+			margin: 0;
+		}
+
+#footer3{
+	height: 90px;
+	font-family: Calibri, "Trebuchet MS";
+	font-size: 11px;
+	background: url("images/footer3_background.png") 50% 0 no-repeat;
+	border-top: solid 1px #414348;
+}
+	#footer3 .wrapper{
+		overflow: hidden;
+		width: 1000px;
+		margin: 0 auto;
+		color: #8f939e;
+	}
+		#footer3 .wrapper a{
+			color: #e7edff;
+			text-decoration: none;
+		}
+		#footer3 .wrapper ul{
+			float: left;
+			padding: 20px 0 0 0;
+			line-height: 22px;
+		}
+		#footer3 .wrapper p{
+			float: right;
+			height: 90px;
+			line-height: 90px;
+		}
