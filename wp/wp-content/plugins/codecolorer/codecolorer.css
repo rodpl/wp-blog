@@ -2,7 +2,7 @@
 .codecolorer { padding: 5px; text-align: left; }
 code.codecolorer { padding: 2px; }
 .codecolorer-container { margin-bottom: 10px; text-align: left; }
-.codecolorer, .codecolorer *, .codecolorer-container, .codecolorer-container * { font: 13px/1.4em Monaco, Lucida Console, monospace }
+.codecolorer, .codecolorer *, .codecolorer-container, .codecolorer-container * { font: 12px/1.4em Monaco, Lucida Console, monospace }
 
 .codecolorer-container table { border: 0px; }
 .codecolorer-container table td { margin: 0px; padding: 0px; border: 0px; }
@@ -156,7 +156,7 @@ code.codecolorer { padding: 2px; }
 .mac-classic .xml .re0 { color: #0000CD; }
 
 /* "Vibrant Ink" color scheme */
-.vibrant, .vibrant .codecolorer { color: #FFFFFF; background-color: #000000; }
+.vibrant, .vibrant .codecolorer { color: #FFFFFF; background-color: #28292D; }
 .vibrant .codecolorer .co0, .vibrant .codecolorer .co1, .vibrant .codecolorer .co2, .vibrant .codecolorer .co3, .vibrant .codecolorer .co4, .vibrant .codecolorer .coMULTI,
 	code.vibrant .co0, code.vibrant .co1, code.vibrant .co2, code.vibrant .co3, code.vibrant .co4, code.vibrant .coMULTI
 	{ color: #9933CC; font-style: italic; }
