@@ -1,0 +1,115 @@
+From: rod
+Id: 75
+Subject: Poprawny import projektów .NET z SVN do GitHub.
+Status: draft – 0 Comments
+Categories: No category
+Tags: 
+Date: 04/06/10 16:52:22
+
+Powstało wiele opisów jak importować repozytoria z svn do git. Niestety żaden
+z nich nie uwzględnia dosyć istotnej rzeczy, zakończenia lini tekstu.
+Domyślnie, repozytoria svn przechowują pliki w taki sposób jak są one
+wprowadzone. W wiekszości sytuacji nie stanowi to żadnego problemu gdy nasze
+projekty są rozwijane przy użyciu jednego typu platformy np. Windows. W takim
+wypadku zakończenie lini tekstu we wszystkich plikach tekstowych to CRLF. Co
+jednak zrobić z projektem, który jest rozwijany na wielu typach platform np.
+za pomocą mono na Linux-ie? Może dojść do niezłego bałaganu. Część plików w
+repozytorium może mieć zakończenia CRLF a część LF. Podkreślam w repozytorium.
+Jeżeli mamy ustawione props `svn:eol-style` jako `native`, wówczas klient svn
+automatycznie przekonwertuje na aktualny typ systemu. Teoretycznie wszystko
+jest w najlepszym porzadku. Problem pojawia się gdy importujemy takie
+repozytorium do git. Taki problem mają własnie programiści projektu Castle.
+Opisują to w wątku
+[Git line endings](http://groups.google.com/group/castle-project-devel/browse_thread/thread/b4be04e6ac743214)
+ale o tym za chwilę.
+
+Repozytoria git zachowują się podobnie. Przyjmują pliki tak jak są one
+dostarczone. Jednak ogólnie przyjęło się aby zakończenia dla plików tekstowych
+w repozytorium były zawsze LF. Aby uzyskać taki efekt, klienci Windows powinni
+mieć ustawiony atrybut `core.autocrlf=true` (domyślne ustawienie dla msysgit).
+Atrybut ten powoduje konwersję w locie, w trakcie commit z CRLF na LF oraz w
+trakcie checkout z LF na CLRF.  Dzięki temu na Windows wszystkie  tekstowe
+pliki robocze będą miały zakończenia CRLF, a na Linux LF.
+
+W trakcie importu z svn do git poszczególne commity są zapisywane w git z tymi
+samymi końcówkami co były wprowadzane do svn. Jeżeli ktoś teraz sklonuje takie
+repozytorium oraz będzie miał ustawiony atrybut `core.autoclrf=true`
+wówczas wszystkie pliki tekstowe zostaną traktowane jako zmodyfikowane, gdyz
+zgodnie z atrybutem, git będzie chciał zmienić zakończenia z CRLF na LF.
+Znalazlem dwa rozwiązania:
+
+1.  Rozwiązanie proponowane przez [GitHub](http://www.github.com) jest
+    przedstawione na stronie [Dealing with line
+    endings](http://help.github.com/dealing-with-lineendings/).  Polega ono na
+    stworzeniu jednego commitu zmieniającego koncówki z CRLF na LF dla
+    wszystkich plików tekstowych. Dzięki temu mamy sytuacje znormalizowaną
+    jednak tracimy zalety blame.
+
+2.  Zespół programistów [Castle](http://www.castleproject.org/) proponują
+    wykorzystanie atrybutów w celu wymuszenia stosowania końcówek CLRF zarówno
+    na platformie Windows jak i Linux. Wiąże się to z ustawieniem
+    `core.autocrlf=false` na ssytemie Windows dla danego repozytorium
+    Nastepnie wystarczy stworzyć plik `.gitattributes` z
+    zawartością:
+
+        *.cs crlf diff
+        *.csproj crlf diff
+        *.xml crlf diff
+
+Powyższe rozwiązania można zastosować kiedy już istnieją forks do naszego
+repozytorium. Alternatywną drogą jest "przepisanie" wszystkich commit-ów tuż
+po imporcie z svn. Modyfikacja historii wiąże się z brakiem integralności
+forków, które zostały utworzone przed modyfikacją. Dlatego zalecam wykonanie
+tego od razu po imporcie. Aby lepiej przedstawić poszczególne kroki posłużę
+się faktycznym przykładem importu repozytorium svn z google code
+[rod.commons](http://code.google.com/p/rodcommons/) do GitHub.
+
+1.  Po stworzeniu nowego repozytorium, importujemy kod z svn oraz klonujemy go
+    lokalnie. Komenda `git st` zapewne pokaże nam, że wszystkie pliki
+    tekstowe są zmodyfikowane. Wyłączamy autoclrf dla lokalnego repozytorium
+
+        !!class="term"
+        git config core.autoclrf false
+
+2.  Za pomocą `git filter-branch` modyfikujemy historię zmian. Zanim
+    to nastąpi należy pobrać skrypt
+    [changeLineEndings.sh](http://github.com/rodpl/misc-scripts/raw/master/bin/changeLineEndings.sh),
+    który za pomocą dos2unix przekonwertuje zakończenia lini w plikach
+    tekstowych na LF. Przed wykonaniem należy sie upewnić czy skrypt posiada
+    poprawne definicje plików tekstowych. W razie portrzeby dopisać swoje.
+    Teraz można wykonać polecenie z uwzględenieniem ścieżki do pliki
+    changeLineEndings.sh.
+
+        !!class="term"
+        git filter-branch --tree-filter '/pathTo/changeLineEndings.sh' -- --all
+
+    Komendę te wykonujemy spod msysygitowego bash-a.
+
+3.  Nasze repozytorium zawiera teraz dwie wersje historii zmian. Oryginalną
+    oraz tę przed chwilą przepisaną ze zmienionymi zakończeniami linii.
+    Oryginalną można już usunąć zgodnie z dokumentacją do
+    [git filter-branch](http://www.kernel.org/pub/software/scm/git/docs/git-filter-branch.html).
+
+        !!class="term"
+        git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
+        git reflog expire --expire=now --all
+        git gc --prune=now
+
+4.  Teraz wykasujmy nasze wszystkie working files, ustawmy poprawnie autoclrf
+    oraz zróbmy przywrócenie plików.
+
+        !!class="term"
+        rm -rf *
+        git config core.autoclrf true
+        git checkout -- .
+
+5.  Jeżeli po wykonaniu komendy `git status` są pliki zmodyfikowane to zapewne
+    zostały one pominięte przez skrypt changeLineEndings.sh. Dopiszmy
+    rozszerzenia tych plików do skryptu i wykonajmy jeszcze raz dokładnie
+    kroki od 1 do 4.
+
+6. Jeżeli wsystko jest poprawnie to pozostaje nam wykonać aktualizacje
+   zdalnego repozytorium a atrybutem `force`.
+
+        !!class="term"
+        git push -f
