@@ -183,3 +183,13 @@ code.codecolorer { padding: 2px; }
 	{ color: #FFFFFF; }
 .vibrant .xml .re1 { color: #FFCC00; }
 .vibrant .xml .re0 { color: #339999; }
+
+/* Term color scheme */
+.term, .term .codecolorer
+{
+    color: lime;
+    background-color: #003700;
+    font-family: consolas, "Courier New", courier, monospace;
+    font-weight: bold;
+}
+
