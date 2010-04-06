@@ -1146,7 +1146,7 @@ class Markdown_Parser {
 		// Grab the language class using !!lang syntax
 		$pattern = '/^[\t\s]+\!\!(.*)/';
 		if (preg_match($pattern, $codeblock, $matches)){
-			$language_class = $matches[1];
+			$attributes = $matches[1];
 			// remove the line from the source
 			$codeblock = preg_replace($pattern, '', $codeblock);
 		}
@@ -1158,7 +1158,7 @@ class Markdown_Parser {
 		# trim leading newlines and trailing newlines
 		$codeblock = preg_replace('/\A\n+|\n+\z/', '', $codeblock);
 
-		$codeblock = "<pre><code" . ($language_class ? ' class="' . $language_class . '"' : '') . ">" . $codeblock . "\n</code></pre>";
+		$codeblock = "<pre><code" . ($attributes ? ' ' . $attributes . ' ' : '') . ">" . $codeblock . "\n</code></pre>";
 		return "\n\n".$this->hashBlock($codeblock)."\n\n";
 	}
 
