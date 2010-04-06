@@ -1141,6 +1141,16 @@ class Markdown_Parser {
 	}
 	function _doCodeBlocks_callback($matches) {
 		$codeblock = $matches[1];
+		# Modifications based on http://warpspire.com/tipsresources/programming/hacking-markdown-classes-on-the-element/
+		// Hacking in some class-names for code blocks
+		// Grab the language class using !!lang syntax
+		$pattern = '/^[\t\s]+\!\!(.*)/';
+		if (preg_match($pattern, $codeblock, $matches)){
+			$language_class = $matches[1];
+			// remove the line from the source
+			$codeblock = preg_replace($pattern, '', $codeblock);
+		}
+		// End hacking
 
 		$codeblock = $this->outdent($codeblock);
 		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
@@ -1148,11 +1158,11 @@ class Markdown_Parser {
 		# trim leading newlines and trailing newlines
 		$codeblock = preg_replace('/\A\n+|\n+\z/', '', $codeblock);
 
-		$codeblock = "<pre><code>$codeblock\n</code></pre>";
+		$codeblock = "<pre><code" . ($language_class ? ' class="' . $language_class . '"' : '') . ">" . $codeblock . "\n</code></pre>";
 		return "\n\n".$this->hashBlock($codeblock)."\n\n";
 	}
 
-
+ 
 	function makeCodeSpan($code) {
 	#
 	# Create a code span markup for $code. Called from handleSpanToken.
