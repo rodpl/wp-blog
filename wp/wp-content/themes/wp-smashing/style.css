@@ -589,3 +589,12 @@ a:hover{
 			height: 90px;
 			line-height: 90px;
 		}
+
+code
+{
+    background: ghostWhite !important;
+    border: 1px solid #DEDEDE !important;
+    color: #444 !important;
+    font: normal normal normal 90%/1.4em Monaco, 'Lucida Console', 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+    padding: 0px 0.2em !important;
+}
