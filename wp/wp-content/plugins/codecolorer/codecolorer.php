@@ -89,7 +89,7 @@ class CodeColorerLoader {
     add_filter('plugin_row_meta', array('CodeColorerLoader', 'AddPluginLinks'), 10, 2);
 
     // Code highlighting filters
-    add_filter('the_content', array('CodeColorerLoader', 'CallBeforeHighlightCodeBlock'), -1000);
+    add_filter('the_content', array('CodeColorerLoader', 'CallBeforeHighlightCodeBlock'), 7);
     add_filter('the_content', array('CodeColorerLoader', 'CallAfterHighlightCodeBlock'), 1000);
     add_filter('the_excerpt', array('CodeColorerLoader', 'CallBeforeHighlightCodeBlock'), -1000);
     add_filter('the_excerpt', array('CodeColorerLoader', 'CallAfterHighlightCodeBlock'), 1000);

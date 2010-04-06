@@ -44,7 +44,7 @@ class CodeColorer {
   /** Search content for code tags and replace it */
   function BeforeHighlightCodeBlock($content) {
     $content = preg_replace('#(\s*)\[cc([^\s\]_]*(?:_[^\s\]]*)?)([^\]]*)\](.*?)\[/cc\2\](\s*)#sie', '$this->PerformHighlightCodeBlock(\'\\4\', \'\\3\', $content, \'\\2\', \'\\1\', \'\\5\');', $content);
-    $content = preg_replace('#(\s*)\<code(.*?)\>(.*?)\</code\>(\s*)#sie', '$this->PerformHighlightCodeBlock(\'\\3\', \'\\2\', $content, \'\', \'\\1\', \'\\4\');', $content);
+    $content = preg_replace('#(\s*)\<pre\>\<code(.*?)\>(.*?)\</code\>\</pre\>(\s*)#sie', '$this->PerformHighlightCodeBlock(\'\\3\', \'\\2\', $content, \'\', \'\\1\', \'\\4\');', $content);
 
     return $content;
   }
