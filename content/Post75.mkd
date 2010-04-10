@@ -1,7 +1,7 @@
 From: rod
 Id: 75
 Subject: Poprawny import projektów .NET z SVN do GitHub.
-Status: draft – 0 Comments
+Status: publish – 0 Comments
 Categories: No category
 Tags: 
 Date: 04/06/10 16:52:22
@@ -99,7 +99,7 @@ się faktycznym przykładem importu repozytorium svn z google code
     oraz zróbmy przywrócenie plików.
 
         !!class="term"
-        rm -rf *
+        git ls-files -z | xargs -0 rm
         git config core.autoclrf true
         git checkout -- .
 
