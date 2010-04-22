@@ -108,8 +108,12 @@ się faktycznym przykładem importu repozytorium svn z google code
     rozszerzenia tych plików do skryptu i wykonajmy jeszcze raz dokładnie
     kroki od 1 do 4.
 
-6. Jeżeli wsystko jest poprawnie to pozostaje nam wykonać aktualizacje
-   zdalnego repozytorium a atrybutem `force`.
+6.  Jeżeli wsystko jest poprawnie to pozostaje nam wykonać aktualizacje
+    zdalnego repozytorium a atrybutem `force`.
 
         !!class="term"
         git push -f
+
+    Jeżeli akutalizacja się nie powiodła z komunikatem `error: denying non-fast
+    forward refs/heads/master (you should pull first)`. Wówczas należy ustawić
+    `denyNonFastforwards` w pliku `config` po stronie repozytorium na `false`.
