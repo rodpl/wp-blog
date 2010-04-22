@@ -1153,7 +1153,7 @@ class Markdown_Parser {
 		// End hacking
 
 		$codeblock = $this->outdent($codeblock);
-		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
+		//$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
 
 		# trim leading newlines and trailing newlines
 		$codeblock = preg_replace('/\A\n+|\n+\z/', '', $codeblock);
