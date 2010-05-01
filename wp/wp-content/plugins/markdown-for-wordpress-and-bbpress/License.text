@@ -1,12 +1,6 @@
-Markdown for WordPress and bbPress
-
-additional conduit for bbPress usage
-Copyright (c) 2008 Michael Yoshitaka Erlewine
-<http://mitcho.com/code/>
-
-Based on PHP Markdown & Extra
-Copyright (c) 2004-2008 Michel Fortin  
-<http://www.michelf.com/>  
+PHP Markdown & Extra  
+Copyright (c) 2004-2009 Michel Fortin  
+<http://michelf.com/>  
 All rights reserved.
 
 Based on Markdown  
