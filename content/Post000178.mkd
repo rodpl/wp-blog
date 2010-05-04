@@ -1,0 +1,73 @@
+From: rod
+Id: 178
+Subject: Indirect dependency dla projektów NET 2.0 pod Visual Studio 2010
+Status: publish – 0 Comments
+Categories: No category
+Tags: RhinoMocks, Visual Studio
+Date: 04/22/10 10:00:10
+
+W projekcie nad którym pracuje korzystam z biblioteki
+[Rhino.Mocks](http://www.ayende.com/projects/rhino-mocks.aspx) w wersji 3.5.
+Projekt ten jest napisany dla NET 2.0 przy użyciu Visual Studio 2005.
+Przejscie na Visual Studio 2008 nie sprawiało żanych problemów. Czas przyszedł
+na Visual Studio 2010. I pojawił się problem w postaci ostrzeżenia:
+
+> Warning	4	The primary reference "Rhino.Mocks, Version=3.5.0.1337,
+Culture=neutral, PublicKeyToken=0b3305902db7183f,
+processorArchitecture=MSIL" could not be resolved because it has an
+indirect dependency on the framework assembly "System.Core,
+Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+which could not be resolved in the currently targeted framework.
+".NETFramework,Version=v2.0". To resolve this problem, either remove
+the reference "Rhino.Mocks, Version=3.5.0.1337, Culture=neutral,
+PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL" or
+retarget your application to a framework version which contains
+"System.Core, Version=3.5.0.0, Culture=neutral,
+PublicKeyToken=b77a5c561934e089".
+
+Niestety efektem jest nie załadowanie się biblioteki Rhino.Mocks a przez to
+niepoprawna kompilacja z powodu "missing assembly reference".  Aby kompilacja
+się powiodła należy ustawić "Specific Version" na `true` dla tej biblioteki.
+Niestety napotykamy na kolejny błąd :(. Domyślnie w pliku csproj napotykamy na
+taką linie.
+
+    !!lang="xml"
+    <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+        <SpecificVersion>False</SpecificVersion>
+        <HintPath>..\..\..\tools\rhino.mocks\Rhino.Mocks.dll</HintPath>
+    </Reference>
+
+Jeżeli ustawimy "Specific Version" na `true` z poziomu Visual Studio, czyli
+wybierając właściwości referencji, wówczas otrzymamy coś takiego w pliku
+csproj.
+
+    !!lang="xml"
+    <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+        <HintPath>..\..\..\tools\rhino.mocks\Rhino.Mocks.dll</HintPath>
+    </Reference>
+
+To nie poprawia kompilacji. Powodem jest błędna interpretacja braku "SpecificVersion" lub to Visual Studio niepoprawnie obsługuje ustawienie Specific Version na `true`.
+Plik csproj należy wyedytować samemu.
+
+    !!lang="xml"
+    <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+        <SpecificVersion>True</SpecificVersion>
+        <HintPath>..\..\..\tools\rhino.mocks\Rhino.Mocks.dll</HintPath>
+    </Reference>
+
+We wszystkich projektach, które korzystają z Rhino.Mocks wprowadziłem poprawke
+... i ... kompilacja dalej niepoprawna.  Jednym z projektów, który korzystał z
+Rhino.Mocka nazywał się "TestSupport" jest to projekt użytkowy z którego
+korzystają pozostałe projekty z unit testami. Okazuje się że referencje do tego
+projektu muszą być ustawione również ze Specific Version na `true`.  W tym
+wypadku Visual Studio nawet we właściwościach referencji do projektu nie
+przewiduje takiego ustawienia ?! Zatem pozostaje edycja ręczna.
+
+    !!lang="xml"
+    <ProjectReference Include="..\TestSupport\TestSupport.csproj">
+        <Project>{3AD7BB3E-437F-40BA-AC73-E1B8F50BA197}</Project>
+        <Name>TestSupport</Name>
+        <SpecificVersion>True</SpecificVersion>
+    </ProjectReference>
+
+Teraz kompilacja się powiodła.
