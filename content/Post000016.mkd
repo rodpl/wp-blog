@@ -1,0 +1,56 @@
+From: rod
+Id: 16
+Subject: Dynamiczne referencje do bibliotek w Visual Studio
+Status: publish – 0 Comments
+Categories: No category
+Tags: MSBuild
+Date: 08/13/08 20:37:00
+
+Często, w trakcie korzystania z zewnętrznych bibliotek w naszym
+projekcie, pojawia się pewien dylemat. Czy dołączone biblioteki, powinny być
+skompilowane jako "debug" czy jako "release" ? Zamiast podejmować trudną
+decyzję zróbmy sobie proste rozwiązanie.
+W [Automatyzacja projektu z MSBuild-em - 1. Struktura]("/blogs/rod/archive/2008/07/13/organizacja-projektu-i-automatyzacja-z-wykorzystaniem-msbuild-a-1-struktura.aspx")
+proponowałem przechowywanie
+"third-party libraries" w katalogu "lib". Teraz dodatkowo zróbmy tam podział na
+"debug" i "release". Przykład z bibliotekami z IronRuby, które wykorzystuje w
+aktualnym projekcie:
+
+* lib
+    * net
+        * 2.0
+            * IronRuby
+                * debug
+                * release
+
+Struktura jest na tyle oczywista że chyba nie trzeba opisywać.
+
+Teraz w naszym pliku projektu ".csproj" wystarczy tak
+zmodyfikować referencje do bibiliotek:
+
+    !!lang="xml"
+    <ItemGroup>
+      <Reference Include="IronRuby">
+        <SpecificVersion>False</SpecificVersion>
+        <HintPath>..\..\..\lib\net\2.0\IronRuby\$(Configuration)\IronRuby.dll</HintPath>
+      </Reference>
+      <Reference Include="IronRuby.Libraries">
+        <SpecificVersion>False</SpecificVersion>
+        <HintPath>..\..\..\lib\net\2.0\IronRuby\$(Configuration)\IronRuby.Libraries.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Scripting">
+        <SpecificVersion>False</SpecificVersion>
+        <HintPath>..\..\..\lib\net\2.0\IronRuby\$(Configuration)\Microsoft.Scripting.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Scripting.Core">
+        <SpecificVersion>False</SpecificVersion>
+        <HintPath>..\..\..\lib\net\2.0\IronRuby\$(Configuration)\Microsoft.Scripting.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="System" />
+      <Reference Include="System.Data" />
+      <Reference Include="System.Xml" />
+    </ItemGroup>
+
+Jezeli nasz projekt jest kompilowany w trybie "Debug", wówczas kompilacja
+odbędzie się z wykorzystaniem innych bibliotek z podkatalogu "debug".
+Analogicznie z "Release".

@@ -1,0 +1,25 @@
+From: rod
+Id: 24
+Subject: Spowolnienie VirtualPC przez System Restore
+Status: publish – 0 Comments
+Categories: No category
+Tags: Virtual PC
+Date: 08/19/09 09:23:00
+
+Jeżeli używacie dysku systemowego (zazwyczaj C: ) do przechowywania swoich
+wirtualnych maszyn, to możecie odczuwać pewne spowolnienie podczas operacji
+dyskowych wewnątrz systemu "gościa". Okazuje się że wasz plik \*.vhd będzie
+ciągle backupowany przez shadow copy. Jednym z rozwiązań jest wyłączenie
+"System Restore", ale ja tego nie polecam. Zamiast tego możemy zrobić –
+[Excluding files from Shadow Copy](http://msdn.microsoft.com/en-us/library/aa819132%28VS.85%29.aspx).
+To samo może tyczyć się innych plików, których snapshotów nie chcemy przetrzymywać.
+U mnie wpisy wykluczeń w rejestrach wyglądają tak:
+
+    $AllVolumes$\VirtualPC\*.* /s
+    C:\Downloads\*.* /s
+    $UserProfile$\Downloads\*.* /s
+
+**Update:** Po restarcie komputera zdarzyło mi się nadal VirtualPC.exe
+zapisywał coś do katalogu “System Volume Information”.  Dopiero opróżnienie
+dotychczasowych “restore points” wyeliminowało problem. Być może system w tym
+katalogu ma nadal zapisane, które pliki ma brać pod uwagę w Shadow Copy.

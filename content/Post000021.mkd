@@ -1,0 +1,39 @@
+From: rod
+Id: 21
+Subject: Jak uruchomić Mono 2.2 VMware na VirtualPC 2007
+Status: publish – 0 Comments
+Categories: No category
+Tags: Mono, Virtual PC
+Date: 02/08/09 14:51:00
+
+Pisząc aplikację .NET czasem chciałbym sprawdzić jak ona chodzi w środowisku
+Mono pod Linuxem. W tym celu można skorzystać z obrazu wirtualnej maszyny pod
+VMWare dostępnej [stąd]("http://www.go-mono.com/mono-downloads/download.html").
+Wszystko
+pięknie ale ja mam już zainstalowane oprogramowanie MS Virtual PC 2007 SP1 i
+szczerze powiedziawszy nie chciałbym instalować dodatkowego oprogramowania
+VMWare Playera. Wiązałoby się to z instalacją dodatkowych driverów na moim i
+tak obciążonym systemie na notebooku. Jak sobie zatem poradzić ?
+
+1. Na początek należy przekonwertować VMWare disk image na VHD. Do tego
+   wykorzystałem [WinImage]("http://www.winimage.com/"). Co prawda wersja
+   shareware ale wyrobiłem się z konwersją w czasie krótszym niż 30 dni :).
+2. Teraz wystarczy stworzyć nowa maszynę wirtualna z systemem "Other" oraz
+   podpiąć przekonwertowany dysk.
+3. W trakcie uruchomienia należy skorzystać z wpisu inicjującego
+   `noreplace-paravirt`.
+   ![Boot loader screenshot](http://zine.net.pl/photos/posts_pictures/images/2854/original.aspx)
+4. Teraz wystarczy dodać tę opcje na stałe do boot-a czyli,
+    1. Computer –&gt; YaST
+    2. hasło *"mono"*
+    3. System –&gt; Boot Loader
+    4. Edit i w polu "Optional Kernel Command Line Parameter" dopisać:
+       `noreplace-paravirt`
+
+Instancje wirtualnych maszyn mogą być mało wydajne na notebookach z nowa
+generacja procesorów. Chodzi tutaj o dynamiczne obniżanie częstotliwości
+taktowania procesora. Aby temu zaradzić można wyłączyć poprzez np. wybranie w
+Viscie trybu High Performance lub ręczne ustawienie "Minimum processor state"
+na 100% w "Power procesor management". Alternatywnym rozwiązaniem jest dodanie
+wpisu do pliku options.xml … jest to opisane tutaj&#160; -&gt;
+[Last resort for performance issues with Virtual PC on laptops]("http://blogs.msdn.com/virtual_pc_guy/archive/2007/03/27/last-resort-for-performance-issues-with-virtual-pc-on-laptops.aspx").

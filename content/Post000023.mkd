@@ -1,0 +1,89 @@
+From: rod
+Id: 23
+Subject: Dostęp do repozytoriów git na repo.or.cz z neostrady
+Status: publish – 3 Comments
+Categories: No category
+Tags: Git, Neostrada
+Date: 07/19/09 15:30:00
+
+Od pewnego czasu, w swoich projektach, porzucam Subversion na rzecz systemów
+[DVSC]("http://en.wikipedia.org/wiki/Distributed_Version_Control_System")
+takich jak Git, Mercurial czy Bazaar. Na świecie jest wiele projektów z
+publicznymi repozytoriami umieszczonymi ja takich serwisach jak
+[GitHub]("http://www.github.com/"),
+[GoogleCode]("http://code.google.com/projecthosting/") (od jakiegoś czasu
+                supportuje Mercurial) i inne. W przypadku git jako klienta
+używam [msysgit]("http://code.google.com/p/msysgit/"). Nie jest to jednak 100%
+port gita. Brakuje mu np. dostępu do repozytoriów za pośrednictwem protokołu
+https. Jednak istnieje branch, w którym dodana jest już ta możliwość.
+Repozytorium msysgit znajduje się tu
+[http://repo.or.cz/r/msysgit.git]("http://repo.or.cz/r/msysgit.git") i tu mamy
+problem. Okazuje się, że TPSA zablokowała jakikolwiek dostęp do domen “or.cz”.
+Na szczęście git potrafi korzystać z http proxy. Co należy zrobić ?  Zakładamy
+ze znamy adres jakiegoś proxy spoza jurysdykcji TPSA (wystarczy poszukać na
+                google). Do dzieła:
+
+Tworzymy lokalne puste repozytorium git 
+
+    !!class="term"
+    mkdir msysgit
+    cd msysgit
+    git init
+
+    Initialized empty Git repository in c:/Projects.Other/msysgit/.git/
+
+Wskazujemy zdalne repozytorium
+
+    !!class="term"
+    git remote add origin http://repo.or.cz/r/msysgit.git
+
+Definiujemy proxy
+
+    !!class="term"
+    git config remote.origin.proxy "aaa.bbb.ccc.ddd:8080"
+
+Pobieramy repozytorium
+
+    !!class="term"
+    git fetch
+
+**Update: 2009-07-19 21:58**
+
+Wykonane do tej pory kroki skopiowały nam tylko repozytorium. Aby móc pracować
+nad kodem należy stworzyć sobie “working copy”. I teraz jest kolejna pułapka.
+Jeżeli pracujemy nad kodem, który jest tworzony pod różnymi systemami, które
+mają różne końce linii to warto dać dla naszego lokalnego repozytorium takie
+ustawienie
+
+    !!class="term"
+    git config core.autocrlf false
+
+Teraz czas na stworzenie working copy. Jeżeli zamierzamy traktować nasze zdalne
+repozytorium jako główne to należy ustawić aby nasz branch master wskazywał na
+origin-a
+
+    !!class="term"
+    git config branch.master.remote origin
+    git config branch.master.merge refs/heads/master
+
+Teraz juz wystarczy
+
+    !!class="term"
+    git pull
+
+### Wersja uproszczona
+
+Istnieje jednak prostsza metoda. Za pomocą zmiennej systemowej "http\_proxy".
+
+    !!class="term"
+    export http_proxy=http://<username>:<password>@<proxy_ip>:<proxy_port>
+
+Teraz juz wystarczy
+
+    !!class="term"
+    git clone http://repo.or.cz/r/msysgit.git my_msysgit
+
+I na wszelki wypadek aby po restarcie shella również działało.
+
+    !!class="term"
+    git config remote.origin.proxy "aaa.bbb.ccc.ddd:8080"

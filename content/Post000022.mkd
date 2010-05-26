@@ -1,0 +1,178 @@
+From: rod
+Id: 22
+Subject: Bezpieczne mockowanie internal methods.
+Status: publish – 4 Comments (2 awaiting, 2 spam)
+Categories: No category
+Tags: RhinoMocks, TDD
+Date: 06/30/09 09:42:00
+
+Trafił mi się dość skomplikowany proces biznesowy, który ma być uruchamiany
+metodą `void Process()`. W celu uproszczenia, rozbiłem ciało tej metody
+na wiele pomniejszych metod.
+
+    !!lang="csharp"
+    public void Process()
+    {
+        List<TelesalesCompanyInfoApplication> applicationsFromDb = this.GetApplicationsFromDatabaseForProcessing();
+        if (applicationsFromDb == null)
+        {
+            throw new CriticalBusinessLogicException("Warstwa bazy danych, podczas podawania listy zgloszen nie powinna zwrócic null.");
+        }
+
+        this.SetLockStatus(applicationsFromDb);
+
+        foreach (TelesalesCompanyInfoApplication application in applicationsFromDb)
+        {
+            if (this.IsOriginalDateOlderThanApplicationDate(application))
+            {
+    ...
+
+Dzięki temu zabiegowi kod stał sie czytelniejszy oraz łatwiej będzie napisać
+testy jednostkowe. Chciałbym jednak uniknąć upubliczniania wszystkich metod w
+tej klasie. Do testów wystarczy że ustawimy je jako `internal` oraz zaufamy
+naszemu projektowi testującemu. Wystarczy w jakimkolwiek pliku dać wpis
+jak:
+
+    !!lang="csharp"
+    [assembly:System.Runtime.CompilerServices.InternalsVisibleTo("Services.UnitTests, PublicKey=A3DS...")]
+
+Teraz bez problemu w naszej klasie testowej możemy testować "pomniejsze",
+`internal` metody:
+
+    !!lang="csharp"
+    [Test]
+    public void IsOriginalDateOlderThanApplicationDate_ApplicationVerificationDateIsGreaterThanSurveyEndDate_ReturnTrue()
+    {
+        TelesalesCompanyInfoApplication application = TelesalesCompanyInfoApplicationObjectMother.Make
+            .Customize(delegate(TelesalesCompanyInfoApplication x) { x.VerifySourceDocumentDate = DateTime.Now.AddDays(-2); })
+            .WithSurveyAs(CompanyInfoSurveyObjectMother.Make.WithDuration(DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-8)));
+
+        Assert.GreaterThan(application.VerifySourceDocumentDate, application.Survey.SurveyEnd);
+
+        DefaultTelesalesCompanyInfoApplicationImportProcessingService service = new DefaultTelesalesCompanyInfoApplicationImportProcessingService();
+        Assert.IsTrue(service.IsOriginalDateOlderThanApplicationDate(application));
+    }
+
+Natomiast do przetestowania metody `Process` najlepiej wykorzystać "partial mocking" np. tak:
+
+    !!lang="csharp"
+    // Klasa pomocnicza do mockowania
+    public abstract class MockedTestCase
+    {
+        private MockRepository mockery;
+
+        protected MockRepository Mockery
+        {
+            get { return this.mockery; }
+        }
+
+        public virtual void SetUp()
+        {
+            this.mockery = new MockRepository();
+        }
+    }
+
+    // Bazowa klasa do testowania logiki biznesowej
+    public class ServiceTestCase<TService> : MockedTestCase where TService : IBaseService
+    {
+        protected Func<TService> sutCreator;
+
+        private TService sut;
+
+        protected TService Sut
+        {
+            get { return this.sut; }
+            set { this.sut = value; }
+        }
+
+        public static IUserSession GetStubbedUserSession()
+        {
+            IUserSession session = new UserSessionStub();
+            User sampleUser = new User();
+            sampleUser.LoginName = "test";
+            session.CurrentUser = sampleUser;
+
+            return session;
+        }
+
+        [SetUp]
+        public override void SetUp()
+        {
+            base.SetUp();
+            if (this.sutCreator != null)
+            {
+                this.Sut = this.sutCreator();
+            }
+        }
+
+        public class UserSessionStub : BaseUserSession
+        {
+        }
+    }
+
+    // Nasza klasa testujaca
+    [TestFixture]
+    public class DefaultTelesalesCompanyInfoApplicationImportProcessingServiceTests : ServiceTestCase<DefaultTelesalesCompanyInfoApplicationImportProcessingService>
+    {
+        public DefaultTelesalesCompanyInfoApplicationImportProcessingServiceTests()
+        {
+            this.sutCreator = delegate { return Mockery.PartialMock<DefaultTelesalesCompanyInfoApplicationImportProcessingService>(); };
+        }
+
+        [Test]
+        public void Process_GetApplicationsFromDatabaseForProcessingReturnsNull_ThrowsCriticalBusinessLogicException()
+        {
+            using (Mockery.Record())
+            {
+                Expect
+                    .Call(this.Sut.GetApplicationsFromDatabaseForProcessing())
+                    .Return(null);
+            }
+
+            using (Mockery.Playback())
+            {
+                Assert.Throws<CriticalBusinessLogicException>(delegate { this.Sut.Process(); });
+            }
+        }
+    ...
+
+Niestety nie da sie zrobić w taki sposób “partial mocking” dla metod
+oznaczonych jako `internal`. Musiały by one być `public virtual`, a tego
+chciałbym uniknąć. Jednym ze sposobów jest ustawienie aby główny projekt
+"Service" zaufał bibliotece DynamicProxy2 z projektu Castle, która jest
+niepodpisana. Nie wygląda to zachęcająco. Ale możemy to zrobić pośrednio:
+"Service" ufa "Service.UnitTests" a ten ufa "DynamicProxy2". Zatem do
+"Service.UnitTests" dodajemy:
+
+    !!lang="csharp"
+     [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
+oraz tworzymy pośrednia klasę która dziedziczy po naszej klasie testowanej.
+Należy pamiętać ze musi ona nadpisywać metody które uczestniczą w procesie
+partial mocking:
+
+    !!lang="csharp"
+    public class TrustedDefaultTelesalesCompanyInfoApplicationImportProcessingService : DefaultTelesalesCompanyInfoApplicationImportProcessingService
+    {
+        internal override List<TelesalesCompanyInfoApplication> GetApplicationsFromDatabaseForProcessing()
+        {
+            return base.GetApplicationsFromDatabaseForProcessing();
+        }
+    }
+
+oraz zmieniamy sposób tworzenia instancji testowanej klasy:
+
+    !!lang="csharp"
+    // z
+
+    public DefaultTelesalesCompanyInfoApplicationImportProcessingServiceTests()
+    {
+        this.sutCreator = delegate { return Mockery.PartialMock<DefaultTelesalesCompanyInfoApplicationImportProcessingService>(); };
+    }
+
+    // na
+
+    public DefaultTelesalesCompanyInfoApplicationImportProcessingServiceTests()
+    {
+        this.sutCreator = delegate { return Mockery.PartialMock<TrustedDefaultTelesalesCompanyInfoApplicationImportProcessingService>(); };
+    }

@@ -1,0 +1,48 @@
+From: rod
+Id: 18
+Subject: Tak blisko, a za daleko
+Status: publish – 1 Comments (1 spam)
+Categories: No category
+Tags: ReSharper, Tools, ViEmu
+Date: 12/11/08 23:07:00
+
+W trakcie pracy nad kodem staram się jak najbardziej ograniczać moje wędrówki
+między kawiaturą a myszką. W tym celu oprócz
+[ReSharper]("http://www.jetbrains.com/resharper/")-a korzystam z
+[ViEmu]("http://www.viemu.com/"). Jak sama nazwa wskazuje jest to emulacja
+edytora Vi pod Visual Studio. Teraz mój gryzoń często leniuchuje przy
+klawiaturze grzejąc się w blasku monitora :). Mimo tego wciąż moje palce
+pokonują spore odległości. Sięgając po klawisz *Esc* oraz *strzałki*.
+
+*Esc* w Vi jest używany do wychodzenia z trybu "Insert", czyli praktycznie
+non-stop. Alternatywnym rozwiazaniem jest zastosowanie *Ctrl+[*. Jednak
+ReSharper też korzysta z tego skrótu. Jak dla mnie najlepszym rozwiązaniem
+byłoby skorzystanie z klawisza *CapsLock* zamiast *Esc.*
+
+Mimo stosowania klawiszy *H, J, K, L* do poruszania sie po kodzie, czasem
+zachodzi potrzeba korzystania ze strzałek. Ma to miejsce kiedy wyświetla się
+nam okienko z Intelisense. Tutaj można by zastosować *Alt+N* do poruszania się
+w doł a *Alt+P* w górę po opcjach intelisense. Tylko jak to zrobić ?
+
+Z pomocą przychodzi nam [AutoHotKey]("http://www.autohotkey.com/"). Jest to
+rezydentny program, który potrafi klawiszom przypisywać różne makra.  Makra te
+sa definiowane w postaci skryptu. W moim wypadku wygląda on tak
+
+    #IfWinActive, ,Visual Studio
+        Capslock::Esc
+        Alt & p::Send {Up}
+        Alt & n::Send {Down}
+
+Co ciekawe program ten potrafi konwertować swoje pliki skryptowe do plików exe.
+Zatem można na obcym komputerze odpalić tak skompilowany skrypt bez instalacji
+czegokolwiek, aby dalej cieszyć się naszą kombinacją klawiszy.
+
+**Update:** Oto mała poprawka do popupów reshapera. Np. w momencie wyszukiwania
+jakiegos typu. Docelowy skrytpt powinien wygladać tak.
+
+    if WinActive(“ahk_class Visual Studio”) or WinActive(“ahk_class JetPopupMenuView”)
+    {
+        Capslock::Esc
+        Alt & p:: Send {Up}
+        Alt & n:: Send {Down}
+    }

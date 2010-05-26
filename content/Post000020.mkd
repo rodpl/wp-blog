@@ -1,0 +1,24 @@
+From: rod
+Id: 20
+Subject: Intelisense dla jQuery korzystając z MonoRail
+Status: publish – 0 Comments
+Categories: No category
+Tags: jQuery, MonoRail, Visual Studio
+Date: 01/27/09 15:48:00
+
+Od jakiegoś czasu Microsoft udostępnił fix do Visual Studio 2008, dzięki
+któremu nie tylko mamy możliwość intelisense dla jQuery ale równiez dla
+jakichkolwiek bibliotek javascript. Po jego zainstalowaniu wystarczy dodać link
+do skryptu tak aby Visual Studio mógł go znaleźć. Co jednak zrobić w przypadku
+kiedy link do skryptu jest generowany w locie lub w danym momencie edytujemy
+"partial view", czyli wycinek HTML-a ? Dodatkowo korzystamy z MonoRail-a ?
+
+Wystarczy zrobić prosty trick:
+
+    !!lang="asp"
+    <script type="text/javascript" src="${siteRoot}/content/scripts/jquery.js"></script>
+    <script type="text/javascript" src="${siteRoot}/content/scripts/jquery.validate.js"></script>
+    <% if (false): %>
+    <script type="text/javascript" src="../../content/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../../content/scripts/jquery.validate.js"></script>
+    <% end %>

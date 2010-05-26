@@ -1,0 +1,24 @@
+From: rod
+Id: 17
+Subject: Remote backup dla SVN na GoogleCode
+Status: publish – 2 Comments
+Categories: No category
+Tags: Subversion
+Date: 08/21/08 23:37:54
+
+Backupy dla SVN można wykonać za pomocą komendy `svnadmin dump`.
+Możliwe jest to jedynie wyłącznie kiedy mamy fizyczny dostęp do repozytorium.
+Co zrobić kiedy nasz projekt jest hostowany ?
+
+1. Należy zrobić lokalny mirror. W tym celu napisałem mały skrypt WSH, który
+   automatyzuje poszczególne kroki. Można go pobrać stąd -&gt;
+   [svnmirror.zip]("http://www.42n.pl/files/svnmirror.zip") oraz uruchomić
+   podając gdzie ma się znajdować lokalne repozytorium a gdzie zdalne. Przykład
+
+        !!class="term"
+        C:\SVN>svnmirror C:\SVN\RubyView.Mirror https://dabrowski.daniel@rubyview.googlecode.com/svn
+
+2. Teraz już wystarczy wykonać dump naszego mirror-a czyli:
+
+        !!class="term"
+        C:\SVN>svnadmin dump C:\SVN\RubyView.Mirror > RubyView.Mirror.20080821

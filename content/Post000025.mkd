@@ -1,0 +1,76 @@
+From: rod
+Id: 25
+Subject: Definiowanie nazw kolumn dla ICompositeUserType za pomocą Fluent NHibernate
+Status: publish – 0 Comments
+Categories: No category
+Tags: Fluent NHibernate, NHibernate
+Date: 03/20/10 09:12:00
+
+Do aktualnego projektu wykorzystuje klasę `DateRange` z biblioteki
+[MindLib]("http://mindlib.sf.net/"). Klasa ta definiuje w łatwy sposób okres
+czasu oraz metody do manipulacji okresem.  Biblioteka posiada również klasę
+`DateRangeUserType` do definicji typu dla NHibernate.  Klasa ta dziedziczy
+pośrednio po `ICompositeUserType`.  Domyślnie na ten typ składają sie dwie
+kolumny w tabeli bazy danych:
+
+    !!lang="csharp"
+    private string[] propertyNames = new string[] {"Start", "End"};
+    private IType[] propertyTypes = new IType[] {NHibernateUtil.DateTime, NHibernateUtil.DateTime};
+
+Co jeżeli chcielibyśmy wykorzystać dwa razy typ `DateRange` w naszej encji ?
+Należy wówczas dla każdego property zdefiniować parę kolumn o różnych nazwach.
+W pliku mapowania NHibernate wyglądałoby to tak:
+
+    !!lang="xml"
+    <property name="Period"
+        type="MindHarbor.TimeDataUtil.DateRangeUserType,MindHarbor.TimeDataUtil">
+        <column name="RangeStart"/>
+        <column name="RangeEnd" />
+    </property>
+
+… a za pomocą Fluent NHibernate tak:
+
+    !!lang="csharp"
+    mapping.Map(x => x.Period).CustomType<DateRangeUserType>()
+        .Columns.Add("RangeStart", "RangeEnd");
+
+Niestety to spowoduje błąd mówiący o tym że za dużo jest kolumn zdefiniowanych
+dla typu `DateRangeUserType`. Okazuje się że autorzy Fluent NHibernate
+automatycznie definiują kolumny dla mapowań implementujących
+`ICompositeUserType`:
+
+    !!lang="csharp"
+    /// <summary>
+    /// Specifies that a custom type (an implementation of <see cref="IUserType"/>) 
+    /// should be used for this property for mapping it to/from one or more database
+    /// columns whose format or type doesn't match this .NET property.
+    /// </summary>
+    /// <param name="type">A type which implements <see cref="IUserType"/>.</param>
+    /// <returns>This property mapping to continue the method chain</returns>
+    public PropertyPart CustomType(Type type)
+    {
+        if (typeof(ICompositeUserType).IsAssignableFrom(type))
+            AddColumnsFromCompositeUserType(type);
+
+        return CustomType(TypeMapping.GetTypeString(type));
+    }
+
+    -- Cut--
+
+    private void AddColumnsFromCompositeUserType(Type compositeUserType)
+    {
+        var inst = (ICompositeUserType)Activator.CreateInstance(compositeUserType);
+
+        foreach (var name in inst.PropertyNames)
+        {
+            Columns.Add(name);
+        }
+    }
+
+Zatem należy wykasować automatycznie stworzone kolumny a dopiero potem
+zdefiniować własne.
+
+    !!lang="csharp"
+    mapping.Map(x => x.Period).CustomType<DateRangeUserType>()
+        .Columns.Clear()
+        .Columns.Add("RangeStart", "RangeEnd");

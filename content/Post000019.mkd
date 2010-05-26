@@ -1,0 +1,30 @@
+From: rod
+Id: 19
+Subject: Ignorowanie testu w MbUnit 3.0.5
+Status: publish – 0 Comments
+Categories: No category
+Tags: MbUnit, NHibernate, TDD
+Date: 01/13/09 18:01:00
+
+Aby zignorować test wystarczy dodać atrybut `[Ignore]` do deklaracji metody. Co
+natomiast natomiast zrobić jeżeli decyzje o ignorowaniu wykonania testu
+chcielibyśmy podjąć dopiero w trakcie jego wykonania ? Zarówno w NUnit jak i
+MbUnit 2.0 istnieje metoda `Assert.Ignore()`, która powoduje że test jest
+ignorowany w momencie jej wywołania.
+
+Niestety MbUnit odwersji 3.0 tej metody już nie ma. Obejściem tego problemu
+jest rzucenie odpowiedniego Exception. Oto przykład pomocniczej metody
+testowej, której zadaniem jest sprawdzanie poprawności mapowania długości pola
+w NHibernate.  SQLite nie posiada w ogóle czegoś takiego jak określenie
+długości pola zatem dla tego typu bazy danych ten test nie miałby sensu. A oto
+i kod:
+
+    !!lang="csharp"
+    protected void AssertPropertyLength(string propertyName, int length)
+    {
+        var driver = ((SessionFactoryImpl)this.Session.SessionFactory).ConnectionProvider.Driver;
+        if (driver.GetType().Equals(typeof(SQLite20Driver)))
+        {
+            throw new SilentTestException(TestOutcome.Ignored, "Test skipped for SQLite");
+        }
+    ...
