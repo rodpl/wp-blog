@@ -53,7 +53,7 @@ $(document).ready(function(){
 </div>
 
 <div id="quote">
-	<p>&quot;Design is a plan for arranging elements in such a way as best to accomplish a particular purpose&quot; &mdash; Charles Eames</p>
+	<p></p>
 </div>
 
 <div id="frame">

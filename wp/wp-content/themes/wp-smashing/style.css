@@ -49,7 +49,7 @@ a:hover{
 			position: absolute;
 			top: 20px;
 			left: 50%;
-			margin: 0 0 0 -500px;
+			margin: 3px 0px 0px -462px;
 			width: 320px;
 			height: 60px;
 			background: url("images/header_heading_background.png") 0 0 no-repeat;
@@ -141,16 +141,16 @@ a:hover{
 			}
 
 #quote{
-	height: 70px;
-	background: #eeeddf url("images/quote_background.png") 50% 0 no-repeat;
+	height: 30px;
+	background: #dcdee5;
 }
 	#quote p{
-		display: none;
+		display: block;
 	}
 
 
 #frame{ /* set the main background color */
-	background: #eeeddf;
+	background: #dcdee5;
 }
 	#page{ /* center the content */
 		overflow: hidden;
@@ -239,8 +239,8 @@ a:hover{
 #content{
 	float: left;
 	width: 658px;
-	background: #fff url("images/post-head-bg.png") 0 0 repeat-x;
-	border: solid 1px #d7d6c9;
+	background: #edeffa url("images/post-head-bg.png") 0 0 repeat-x;
+	border: solid 1px #d3d4db;
 }
 	#content .post{
 		padding: 10px;
@@ -257,7 +257,7 @@ a:hover{
 				font-size: 24px;
 				font-weight: bold;
 				text-transform: uppercase;
-				border-bottom: 1px solid #e9e8e1;
+				border-bottom: 1px solid #d3d4db;
 			}
 				#content .post .head h1 a{
 					color: #b40707;
