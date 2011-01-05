@@ -1,0 +1,30 @@
+From: Daniel Dąbrowski
+Id: 227
+Subject: Ignoring test in MbUnit 3.0.5
+Status: draft – 0 Comments
+Categories: No category
+Tags: 
+Date: 06/02/10 22:16:32
+
+To ignore a test just add  the attribute `Ignore` to the method declaration.
+What to do if decision about ignoring should be taken during test execution ?
+There was the `Assert.Ignore()` method in NUnit and MbUnit 2.0, which causes
+test ignoring during call.
+
+Unfortunately there is no more such method since MbUnit 3.0. To work around
+this problem is to throw an appropriate Exception. Here is an example of axuliary
+test method, which aims to validate length of the field mapping in NHibernate.
+SQLite has no length for text field, so it should be ignored for such database
+type. Here is the code:
+
+    !!lang="csharp"
+    protected void AssertPropertyLength(string propertyName, int length)
+    {
+        var driver = ((SessionFactoryImpl)this.Session.SessionFactory).ConnectionProvider.Driver;
+        if (driver.GetType().Equals(typeof(SQLite20Driver)))
+        {
+            throw new SilentTestException(TestOutcome.Ignored, "Test skipped for SQLite");
+        }
+    ...
+
+

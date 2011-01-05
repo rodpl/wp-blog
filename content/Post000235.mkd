@@ -1,0 +1,56 @@
+From: Daniel Dąbrowski
+Id: 235
+Subject: Jak użyć LWin+L w Windows 7 bez lock-a ekranu.
+Status: publish – 0 Comments
+Categories: No category
+Tags: AutoHotkey
+Date: 01/05/11 23:28:45
+
+Aby chronić nadgarstki postanowiłem korzystać z poruszania kursorem pod windowsami
+za pomocą klawiszy H, J, K, L, podobnie jak ma to miejsce w Vim. Klawiszem
+dodatkowym miał być LWin. Niestety począwszy od Visty LWin + L powoduje lock
+screen. Nie da się nadpisać tej kombinacji przy użyciu AutoHotkey. Aby temu
+zaradzić postanowiłem zmienić miejscami klawisze Context Key z LWin przy
+użyciu programu [KeyTweak](http://webpages.charter.net/krumsick/). Program ten
+nie jest rezydentny a jedynie modyfikuje rejestry. Teraz wystarczy wprowadzić
+małe zmiany w skrypcie AutoHotkey.
+
+
+    ;Map to left arrow or ctrl left arrow
+    AppsKey & h::
+    GetKeyState, state, shift, P
+    if state = D 
+    send, ^{left}
+    else
+    send, {left} 
+    return
+
+    ;Map to right arrow or ctrl right arrow
+    AppsKey & l::
+    GetKeyState, state, shift, P
+    if state = D 
+    send, ^{right}
+    else
+    send, {right} 
+    return
+
+    ;Map to up arrow
+    AppsKey & k::
+    GetKeyState, state, shift, P
+    if state = D 
+    send, {shift}+{up}
+    else
+    send, {up}
+    return
+
+    ;Map to down arrow
+    AppsKey & j::
+    GetKeyState, state, shift, P
+    if state = D 
+    send, {shift}+{down}
+    else
+    send, {down}
+    return
+
+Moje ustawienia dla AutoHotkey zawsze można znaleźć aktualne na [moim GitHub
+repository](http://github.com/rodpl/misc-scripts).
